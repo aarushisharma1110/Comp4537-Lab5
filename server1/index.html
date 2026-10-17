@@ -1,0 +1,55 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title></title>
+
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+<main class="container">
+
+    <header>
+        <h1 id="page-title"></h1>
+        <p id="page-description"></p>
+    </header>
+
+    <section class="insert-section">
+        <h2 id="insert-title"></h2>
+
+        <button id="insert-button" type="button"></button>
+    </section>
+
+    <section class="query-section">
+        <h2 id="query-title"></h2>
+
+        <label id="query-label" for="sql-query"></label>
+
+        <textarea
+                id="sql-query"
+                rows="5"
+        ></textarea>
+
+        <button id="submit-button" type="button"></button>
+    </section>
+
+    <section class="result-section">
+        <h2 id="result-title"></h2>
+
+        <div id="response-message"
+             role="status"
+             aria-live="polite"></div>
+
+        <div id="query-results"></div>
+    </section>
+
+</main>
+
+<script type="module" src="./js/app.js"></script>
+</body>
+</html>
