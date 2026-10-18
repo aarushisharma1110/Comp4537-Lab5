@@ -92,6 +92,7 @@ textarea:focus {
 
 #query-results {
     overflow-x: auto;
+    white-space: pre-wrap;
 }
 
 table {

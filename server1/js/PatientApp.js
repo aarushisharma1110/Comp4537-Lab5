@@ -62,13 +62,14 @@ export class PatientApp {
         this.insertButton.disabled = true;
 
         xhttp.onreadystatechange = () => {
-            if (xhttp.readyState === 4) {
+            if (xhttp.readyState === 4 && xhttp.status !== 0) {
                 this.insertButton.disabled = false;
+                const data = this.parseResponse(xhttp.responseText);
 
                 if (xhttp.status >= 200 && xhttp.status < 300) {
-                    this.showMessage(xhttp.responseText);
+                    this.showMessage(data && data.message ? data.message : xhttp.responseText);
                 } else {
-                    this.showMessage(this.messages.SERVER_ERROR);
+                    this.showMessage(this.getErrorMessage(data));
                 }
             }
         };
@@ -79,13 +80,15 @@ export class PatientApp {
         };
 
         xhttp.open(CONFIG.METHODS.POST, url, true);
-        xhttp.send();
+        xhttp.setRequestHeader("Content-Type", "application/json");
+        xhttp.send(JSON.stringify(CONFIG.PATIENTS));
     }
 
     executeQuery() {
         const query = this.sqlQuery.value.trim();
 
         if (query === "") {
+            this.queryResults.replaceChildren();
             this.showMessage(this.messages.EMPTY_QUERY);
             return;
         }
@@ -96,18 +99,18 @@ export class PatientApp {
         const xhttp = new XMLHttpRequest();
 
         this.showMessage(this.messages.LOADING);
-        this.queryResults.replaceChildren();
         this.submitButton.disabled = true;
 
         xhttp.onreadystatechange = () => {
-            if (xhttp.readyState === 4) {
+            if (xhttp.readyState === 4 && xhttp.status !== 0) {
                 this.submitButton.disabled = false;
+                const data = this.parseResponse(xhttp.responseText); 
 
                 if (xhttp.status >= 200 && xhttp.status < 300) {
                     this.showMessage(this.messages.QUERY_SUCCESS);
-                    this.displayResults(xhttp.responseText);
+                    this.displayResults(data);
                 } else {
-                    this.showMessage(this.messages.SERVER_ERROR);
+                    this.showMessage(this.getErrorMessage(data));
                 }
             }
         };
@@ -125,7 +128,19 @@ export class PatientApp {
         this.responseMessage.textContent = message;
     }
 
-    displayResults(response) {
-        this.queryResults.textContent = response;
+    parseResponse(text) {
+        try {
+            return JSON.parse(text);
+        } catch (error) {
+            return null;
+        }
+    }
+
+    getErrorMessage(data) {
+        return data && data.error ? data.error : this.messages.SERVER_ERROR;
+    }
+
+    displayResults(rows) {
+        this.queryResults.textContent = JSON.stringify(rows, null, 2);
     }
 }
