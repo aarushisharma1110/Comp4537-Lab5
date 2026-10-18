@@ -99,6 +99,7 @@ export class PatientApp {
         const xhttp = new XMLHttpRequest();
 
         this.showMessage(this.messages.LOADING);
+        this.queryResults.replaceChildren();
         this.submitButton.disabled = true;
 
         xhttp.onreadystatechange = () => {
